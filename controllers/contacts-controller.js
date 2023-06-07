@@ -1,13 +1,5 @@
-const Joi = require("joi");
-
 const contactsService = require("../models/contacts");
 const { HttpError } = require("../helpers");
-
-const contactsAddSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
-});
 
 const getContact = async (req, res, next) => {
   try {
@@ -36,12 +28,6 @@ const getContactById = async (req, res, next) => {
 
 const addContact = async (req, res, next) => {
   try {
-    const { error } = contactsAddSchema.validate(req.body);
-
-    if (error) {
-      throw HttpError(400);
-    }
-
     const result = await contactsService.addContact(req.body);
 
     res.status(201).json(result);
@@ -68,8 +54,7 @@ const deleteContact = async (req, res, next) => {
 
 const updateContactById = async (req, res, next) => {
   try {
-    const { error } = contactsAddSchema.validate(req.body);
-    if (error) {
+    if (!Object.keys(req.body).length) {
       throw HttpError(400, "missing fields");
     }
 
