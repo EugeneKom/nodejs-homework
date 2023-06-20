@@ -21,8 +21,10 @@ const signup = async (req, res) => {
   const newUser = await User.create({ ...req.body, password: hashPassword });
 
   res.status(201).json({
-    name: newUser.name,
-    email: newUser.email,
+    user: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
   });
 };
 
@@ -73,9 +75,7 @@ const logout = async (req, res) => {
 
   await User.findByIdAndUpdate(_id, { token: "" });
 
-  res.json({
-    message: `Bearer ${req.user.token}`,
-  });
+  res.status(204).json({});
 };
 
 const changeSubscriptionType = async (req, res) => {
